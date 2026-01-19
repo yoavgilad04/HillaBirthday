@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hilla's Birthday Game 🎉</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Landing Page -->
+        <div id="landing-page" class="page active">
+            <header class="main-header">
+                <h1>🎂 Birthday Activity Game</h1>
+                <p class="subtitle">Let the fun begin!</p>
+            </header>
+            
+            <div class="action-cards">
+                <button id="create-room-btn" class="action-card">
+                    <div class="action-icon">🎮</div>
+                    <h2>Create Room</h2>
+                    <p>Start a new game</p>
+                </button>
+                
+                <button id="join-room-btn" class="action-card">
+                    <div class="action-icon">👥</div>
+                    <h2>Join Room</h2>
+                    <p>Enter an existing game</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Join Room Modal -->
+        <div id="join-modal" class="modal">
+            <div class="modal-content">
+                <button class="close-btn" id="close-join-modal">&times;</button>
+                <h2>Join Room</h2>
+                
+                <div class="form-group">
+                    <label for="room-code-input">Room Code</label>
+                    <input 
+                        type="text" 
+                        id="room-code-input" 
+                        class="input-field" 
+                        placeholder="Enter 6-digit code"
+                        maxlength="6"
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="player-name-input">Your Name</label>
+                    <input 
+                        type="text" 
+                        id="player-name-input" 
+                        class="input-field" 
+                        placeholder="Enter your name"
+                        maxlength="20"
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <div id="join-error" class="error-message"></div>
+                
+                <button id="join-room-submit-btn" class="btn btn-primary">
+                    Join Game
+                </button>
+            </div>
+        </div>
+
+        <!-- Create Room Modal -->
+        <div id="create-modal" class="modal">
+            <div class="modal-content">
+                <button class="close-btn" id="close-create-modal">&times;</button>
+                <h2>Create Room</h2>
+                
+                <div class="form-group">
+                    <label for="host-name-input">Your Name (Host)</label>
+                    <input 
+                        type="text" 
+                        id="host-name-input" 
+                        class="input-field" 
+                        placeholder="Enter your name"
+                        maxlength="20"
+                        autocomplete="off"
+                    >
+                </div>
+                
+                <div id="create-error" class="error-message"></div>
+                
+                <button id="create-room-submit-btn" class="btn btn-primary">
+                    Create Game Room
+                </button>
+            </div>
+        </div>
+
+        <!-- Room/Waiting Page -->
+        <div id="room-page" class="page">
+            <header class="room-header">
+                <div class="room-code-display">
+                    <span class="label">Room Code:</span>
+                    <span id="display-room-code" class="room-code">------</span>
+                </div>
+                <button id="leave-room-btn" class="btn-icon" title="Leave Room">🚪</button>
+            </header>
+
+            <div class="room-content">
+                <!-- Participants Section -->
+                <div class="section">
+                    <h2>👥 Participants (<span id="participant-count">0</span>)</h2>
+                    <div id="participants-list" class="participants-list">
+                        <!-- Participants will be added here dynamically -->
+                    </div>
+                </div>
+
+                <!-- Activities Section -->
+                <div class="section">
+                    <h2>🎯 Activities (<span id="activities-count">0</span>)</h2>
+                    <div id="activities-list" class="activities-list">
+                        <div class="empty-state">No activities yet. Add one below!</div>
+                    </div>
+                </div>
+
+                <!-- Add Activity Form -->
+                <div class="section">
+                    <h3>Add New Activity</h3>
+                    <div class="add-activity-form">
+                        <input 
+                            type="text" 
+                            id="activity-name-input" 
+                            class="input-field" 
+                            placeholder="e.g., Jump on one foot"
+                            maxlength="100"
+                        >
+                        <input 
+                            type="number" 
+                            id="activity-participants-input" 
+                            class="input-field input-small" 
+                            placeholder="# people"
+                            min="1"
+                            max="20"
+                            value="1"
+                        >
+                        <button id="add-activity-btn" class="btn btn-secondary">Add Activity</button>
+                    </div>
+                    <div id="activity-error" class="error-message"></div>
+                </div>
+
+                <!-- Host Controls -->
+                <div id="host-controls" class="host-controls" style="display: none;">
+                    <button id="start-game-btn" class="btn btn-primary btn-large">
+                        🎮 Start Game
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Page -->
+        <div id="game-page" class="page">
+            <header class="game-header">
+                <div class="game-info">
+                    <span class="game-label">Activities Left:</span>
+                    <span id="activities-remaining" class="game-value">0</span>
+                </div>
+                <button id="end-game-btn" class="btn-icon" title="End Game">🏁</button>
+            </header>
+
+            <div class="game-content">
+                <!-- Activity Display Area -->
+                <div class="activity-display-section">
+                    <div id="activity-roller" class="activity-roller">
+                        <div class="roller-content">
+                            <div class="roller-item">🎯</div>
+                            <div class="roller-item">🎲</div>
+                            <div class="roller-item">🎪</div>
+                        </div>
+                    </div>
+                    
+                    <div id="activity-result" class="activity-result" style="display: none;">
+                        <div class="result-icon">🎯</div>
+                        <div class="result-title" id="current-activity-name">Activity Name</div>
+                        <div class="result-meta">
+                            <span id="current-activity-participants">1</span> 
+                            <span id="current-activity-participants-text">person needed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Participants Display Area -->
+                <div id="participants-display-section" class="participants-display-section" style="display: none;">
+                    <h3>Selected Participants:</h3>
+                    
+                    <div id="participants-roller" class="participants-roller">
+                        <!-- Cycling names will appear here during animation -->
+                    </div>
+                    
+                    <div id="participants-result" class="participants-result" style="display: none;">
+                        <!-- Selected participants will appear here -->
+                    </div>
+                </div>
+
+                <!-- Rating Section -->
+                <div id="rating-section" class="rating-section" style="display: none;">
+                    <h3>⭐ Rate the Participants</h3>
+                    <p class="rating-subtitle">How well did they do?</p>
+                    <div id="rating-list" class="rating-list">
+                        <!-- Rating cards will appear here -->
+                    </div>
+                    <button id="skip-rating-btn" class="btn btn-secondary">Skip Rating</button>
+                </div>
+
+                <!-- Game Controls -->
+                <div class="game-controls">
+                    <button id="roll-activity-btn" class="btn btn-primary btn-large btn-game">
+                        🎲 Roll Activity
+                    </button>
+                    
+                    <button id="roll-participants-btn" class="btn btn-primary btn-large btn-game" style="display: none;">
+                        👥 Roll Participants
+                    </button>
+                    
+                    <button id="next-activity-btn" class="btn btn-secondary btn-large" style="display: none;">
+                        ➡️ Next Activity
+                    </button>
+                </div>
+            </div>
+
+            <!-- Confetti Container -->
+            <div id="confetti-container" class="confetti-container"></div>
+        </div>
+
+        <!-- Leaderboard Page -->
+        <div id="leaderboard-page" class="page">
+            <header class="leaderboard-header">
+                <h1>🏆 Final Scores</h1>
+                <p class="subtitle">Great job everyone!</p>
+            </header>
+
+            <div class="leaderboard-content">
+                <div id="leaderboard-list" class="leaderboard-list">
+                    <!-- Leaderboard items will appear here -->
+                </div>
+
+                <div class="leaderboard-actions">
+                    <button id="back-to-room-btn" class="btn btn-primary btn-large">
+                        🏠 Back to Room
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-database-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/room-manager.js"></script>
+    <script src="js/game-logic.js"></script>
+    <script src="js/game-sync.js"></script>
+    <script src="js/ui-controller.js"></script>
