@@ -1,5 +1,5 @@
 const firebaseConfig = {
-    apiKey: "AIzaSyCw_CkMBwnCe1vagAe3_EYrqeG1d32NVgc",
+    apiKey: "<key>",
     authDomain: "hilla-birthday-game.firebaseapp.com",
     databaseURL: "https://hilla-birthday-game-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "hilla-birthday-game",
