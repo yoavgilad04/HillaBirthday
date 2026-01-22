@@ -260,10 +260,9 @@ function calculateFinalScores() {
     });
 }
 
-function submitRating(participantId, rating) {
+function submitRating(participantId, rating, roundId) {
     if (!getCurrentRoom() || !getCurrentUser()) return Promise.reject(new Error('Not in a room'));
     
-    const roundId = `round_${Date.now()}`;
     const voterId = getCurrentUser().id;
     const ratingRef = database.ref(`rooms/${getCurrentRoom()}/ratings/${roundId}/${participantId}/${voterId}`);
     

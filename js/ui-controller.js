@@ -43,7 +43,8 @@ const endGameBtn = document.getElementById('end-game-btn');
 const participantsDisplaySection = document.getElementById('participants-display-section');
 const ratingSection = document.getElementById('rating-section');
 const ratingList = document.getElementById('rating-list');
-const skipRatingBtn = document.getElementById('skip-rating-btn');
+const submitRatingBtn = document.getElementById('submit-rating-btn');
+const ratingConfirmation = document.getElementById('rating-confirmation');
 const backToRoomBtn = document.getElementById('back-to-room-btn');
 
 let currentRoundId = null;
@@ -365,10 +366,55 @@ endGameBtn.addEventListener('click', () => {
     }
 });
 
+submitRatingBtn.addEventListener('click', () => {
+    if (Object.keys(userRatings).length === 0) {
+        alert('Please rate at least one participant before submitting');
+        return;
+    }
+    
+    submitRatingBtn.disabled = true;
+    submitRatingBtn.textContent = 'Submitting...';
+    
+    const submitPromises = Object.keys(userRatings).map(participantId => {
+        return submitRating(participantId, userRatings[participantId], currentRoundId);
+    });
+    
+    Promise.all(submitPromises)
+        .then(() => {
+            if (ratingConfirmation) {
+                ratingConfirmation.style.display = 'block';
+            }
+            
+            submitRatingBtn.textContent = '✅ Score Submitted!';
+            submitRatingBtn.classList.add('btn-success');
+            submitRatingBtn.classList.remove('btn-primary');
+            
+            const allStarButtons = ratingList.querySelectorAll('.star-btn');
+            allStarButtons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('locked');
+            });
+            
+            createConfetti();
+        })
+        .catch((error) => {
+            console.error('Error submitting ratings:', error);
+            alert('Error submitting ratings. Please try again.');
+            submitRatingBtn.disabled = false;
+            submitRatingBtn.textContent = 'Submit Score';
+        });
+});
+
 function resetGameUI() {
-    rollActivityBtn.style.display = 'block';
-    rollActivityBtn.disabled = false;
-    rollActivityBtn.textContent = '🎲 Roll Activity';
+    const user = getCurrentUser();
+    
+    if (user && user.is_host) {
+        rollActivityBtn.style.display = 'block';
+        rollActivityBtn.disabled = false;
+        rollActivityBtn.textContent = '🎲 Roll Activity';
+    } else {
+        rollActivityBtn.style.display = 'none';
+    }
     
     rollParticipantsBtn.style.display = 'none';
     rollParticipantsBtn.disabled = false;
@@ -376,6 +422,16 @@ function resetGameUI() {
     
     nextActivityBtn.style.display = 'none';
     participantsDisplaySection.style.display = 'none';
+    
+    const participantsResult = document.getElementById('participants-result');
+    const participantsRoller = document.getElementById('participants-roller');
+    if (participantsResult) {
+        participantsResult.innerHTML = '';
+        participantsResult.style.display = 'none';
+    }
+    if (participantsRoller) {
+        participantsRoller.style.display = 'none';
+    }
 }
 
 function escapeHtml(text) {

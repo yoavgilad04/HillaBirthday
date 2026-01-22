@@ -75,6 +75,8 @@ function showActivityResult(activity) {
     const activityNameElement = document.getElementById('current-activity-name');
     const activityParticipantsElement = document.getElementById('current-activity-participants');
     const activityParticipantsTextElement = document.getElementById('current-activity-participants-text');
+    const participantsRoller = document.getElementById('participants-roller');
+    const participantsResult = document.getElementById('participants-result');
     
     activityRoller.style.display = 'none';
     
@@ -86,6 +88,10 @@ function showActivityResult(activity) {
     
     activityResult.style.display = 'block';
     participantsDisplaySection.style.display = 'block';
+    
+    participantsRoller.style.display = 'none';
+    participantsResult.style.display = 'none';
+    participantsResult.innerHTML = '';
     
     createConfetti();
 }
@@ -140,6 +146,18 @@ function showRatingSection(participants) {
     ratingList.innerHTML = '';
     userRatings = {};
     
+    if (submitRatingBtn) {
+        submitRatingBtn.style.display = 'block';
+        submitRatingBtn.disabled = false;
+        submitRatingBtn.textContent = 'Submit Score';
+        submitRatingBtn.classList.remove('btn-success');
+        submitRatingBtn.classList.add('btn-primary');
+    }
+    
+    if (ratingConfirmation) {
+        ratingConfirmation.style.display = 'none';
+    }
+    
     participants.forEach(participant => {
         const ratingCard = document.createElement('div');
         ratingCard.className = 'rating-card';
@@ -173,8 +191,6 @@ function showRatingSection(participants) {
                         starBtn.classList.remove('active');
                     }
                 });
-                
-                submitRating(participantId, rating);
             });
         });
     });
@@ -186,6 +202,15 @@ function hideRatingSection() {
 }
 
 function showHostControls(control) {
+    const user = getCurrentUser();
+    
+    if (!user || !user.is_host) {
+        rollActivityBtn.style.display = 'none';
+        rollParticipantsBtn.style.display = 'none';
+        nextActivityBtn.style.display = 'none';
+        return;
+    }
+    
     rollActivityBtn.style.display = 'none';
     rollParticipantsBtn.style.display = 'none';
     nextActivityBtn.style.display = 'none';
@@ -229,10 +254,6 @@ function showLeaderboard(scores) {
     
     createConfetti();
 }
-
-skipRatingBtn.addEventListener('click', () => {
-    hideRatingSection();
-});
 
 backToRoomBtn.addEventListener('click', () => {
     const user = getCurrentUser();

@@ -253,8 +253,18 @@ function startGame() {
             .then((snapshot) => {
                 const roomData = snapshot.val();
                 
+                if (!roomData) {
+                    reject(new Error('Room not found'));
+                    return;
+                }
+                
                 if (!roomData.activities || Object.keys(roomData.activities).length === 0) {
                     reject(new Error('Add at least one activity before starting'));
+                    return;
+                }
+                
+                if (!roomData.participants) {
+                    reject(new Error('No participants in room'));
                     return;
                 }
                 
