@@ -27,6 +27,12 @@
                     <h2>Join Room</h2>
                     <p>Enter an existing game</p>
                 </button>
+                
+                <button id="blessings-btn" class="action-card">
+                    <div class="action-icon">🎂</div>
+                    <h2>Birthday Wishes</h2>
+                    <p>Share your blessings</p>
+                </button>
             </div>
         </div>
 
@@ -251,15 +257,91 @@
                 </div>
             </div>
         </div>
+
+        <!-- Birthday Wishes Page -->
+        <div id="blessings-page" class="page">
+            <header class="blessings-header">
+                <div class="blessings-title">
+                    <h1>🎂 Birthday Wishes</h1>
+                    <p class="subtitle">Share your love and blessings</p>
+                </div>
+                <button id="back-to-home-btn" class="btn-icon" title="Back to Home">🏠</button>
+            </header>
+
+            <div class="blessings-content">
+                <!-- Add Blessing Form -->
+                <div class="add-blessing-section">
+                    <h2>✨ Write Your Blessing</h2>
+                    
+                    <div class="form-group">
+                        <label for="blessing-name-input">Your Name</label>
+                        <input 
+                            type="text" 
+                            id="blessing-name-input" 
+                            class="input-field" 
+                            placeholder="Enter your name"
+                            maxlength="50"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="blessing-message-input">Your Message</label>
+                        <textarea 
+                            id="blessing-message-input" 
+                            class="input-field textarea-field" 
+                            placeholder="Write your birthday wishes..."
+                            maxlength="500"
+                            rows="4"
+                        ></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="blessing-photo-input">Add Photo (Optional)</label>
+                        <div class="photo-upload-container">
+                            <input 
+                                type="file" 
+                                id="blessing-photo-input" 
+                                accept="image/*"
+                                style="display: none;"
+                            >
+                            <button id="photo-upload-btn" class="btn btn-secondary">
+                                📷 Choose Photo
+                            </button>
+                            <span id="photo-filename" class="photo-filename"></span>
+                            <div id="photo-preview" class="photo-preview" style="display: none;">
+                                <img id="photo-preview-img" src="" alt="Preview">
+                                <button id="remove-photo-btn" class="remove-photo-btn">&times;</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="blessing-error" class="error-message"></div>
+                    
+                    <button id="submit-blessing-btn" class="btn btn-primary btn-large">
+                        🎉 Share Your Blessing
+                    </button>
+                </div>
+
+                <!-- Blessings List -->
+                <div class="blessings-list-section">
+                    <h2>💝 All Wishes (<span id="blessings-count">0</span>)</h2>
+                    <div id="blessings-list" class="blessings-list">
+                        <div class="empty-state">No blessings yet. Be the first to share!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-storage-compat.js"></script>
     
     <!-- App Scripts -->
     <script src="js/firebase-config.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/blessings-manager.js"></script>
     <script src="js/room-manager.js"></script>
     <script src="js/game-logic.js"></script>
     <script src="js/game-sync.js"></script>

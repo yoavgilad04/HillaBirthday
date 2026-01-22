@@ -255,17 +255,19 @@ function showLeaderboard(scores) {
     createConfetti();
 }
 
-backToRoomBtn.addEventListener('click', () => {
-    const user = getCurrentUser();
-    if (!user || !user.is_host) {
-        alert('Only the host can return to the room');
-        return;
-    }
-    
-    if (confirm('Return to room? This will reset the game.')) {
-        const roomRef = database.ref(`rooms/${getCurrentRoom()}`);
-        roomRef.update({ status: 'waiting' }).then(() => {
-            showPage(roomPage);
-        });
-    }
-});
+if (typeof backToRoomBtn !== 'undefined') {
+    backToRoomBtn.addEventListener('click', () => {
+        const user = getCurrentUser();
+        if (!user || !user.is_host) {
+            alert('Only the host can return to the room');
+            return;
+        }
+        
+        if (confirm('Return to room? This will reset the game.')) {
+            const roomRef = database.ref(`rooms/${getCurrentRoom()}`);
+            roomRef.update({ status: 'waiting' }).then(() => {
+                showPage(roomPage);
+            });
+        }
+    });
+}

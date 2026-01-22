@@ -1074,3 +1074,200 @@ h1 {
         min-width: 60px;
     }
 }
+
+/* Blessings Page Styles */
+.blessings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.blessings-title h1 {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 5px;
+}
+
+.blessings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.add-blessing-section {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.add-blessing-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+.textarea-field {
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.photo-upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.photo-filename {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+.photo-preview {
+    position: relative;
+    margin-top: 10px;
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 300px;
+}
+
+.photo-preview img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+}
+
+.remove-photo-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(244, 67, 54, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.remove-photo-btn:hover {
+    background: #f44336;
+    transform: scale(1.1);
+}
+
+.blessings-list-section {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.blessings-list-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+.blessings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.blessing-item {
+    background: #F5F5F5;
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid var(--border-color);
+    animation: fadeInBlessing 0.5s ease-out;
+}
+
+@keyframes fadeInBlessing {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.blessing-header {
+    margin-bottom: 15px;
+}
+
+.blessing-author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.blessing-icon {
+    font-size: 1.5rem;
+}
+
+.blessing-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+.blessing-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.blessing-message {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-dark);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.blessing-photo {
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 400px;
+}
+
+.blessing-photo img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+}
+
+@media (max-width: 480px) {
+    .blessings-title h1 {
+        font-size: 1.5rem;
+    }
+    
+    .add-blessing-section,
+    .blessings-list-section {
+        padding: 20px 15px;
+    }
+    
+    .blessing-photo,
+    .photo-preview {
+        max-width: 100%;
+    }
+}

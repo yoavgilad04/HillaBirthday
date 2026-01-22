@@ -2,9 +2,11 @@ const landingPage = document.getElementById('landing-page');
 const roomPage = document.getElementById('room-page');
 const gamePage = document.getElementById('game-page');
 const leaderboardPage = document.getElementById('leaderboard-page');
+const blessingsPage = document.getElementById('blessings-page');
 
 const createRoomBtn = document.getElementById('create-room-btn');
 const joinRoomBtn = document.getElementById('join-room-btn');
+const blessingsBtn = document.getElementById('blessings-btn');
 
 const joinModal = document.getElementById('join-modal');
 const createModal = document.getElementById('create-modal');
@@ -47,8 +49,23 @@ const submitRatingBtn = document.getElementById('submit-rating-btn');
 const ratingConfirmation = document.getElementById('rating-confirmation');
 const backToRoomBtn = document.getElementById('back-to-room-btn');
 
+const blessingsNameInput = document.getElementById('blessing-name-input');
+const blessingsMessageInput = document.getElementById('blessing-message-input');
+const blessingsPhotoInput = document.getElementById('blessing-photo-input');
+const photoUploadBtn = document.getElementById('photo-upload-btn');
+const photoFilename = document.getElementById('photo-filename');
+const photoPreview = document.getElementById('photo-preview');
+const photoPreviewImg = document.getElementById('photo-preview-img');
+const removePhotoBtn = document.getElementById('remove-photo-btn');
+const submitBlessingBtn = document.getElementById('submit-blessing-btn');
+const blessingError = document.getElementById('blessing-error');
+const blessingsList = document.getElementById('blessings-list');
+const blessingsCount = document.getElementById('blessings-count');
+const backToHomeBtn = document.getElementById('back-to-home-btn');
+
 let currentRoundId = null;
 let userRatings = {};
+let selectedPhotoFile = null;
 
 function showPage(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -466,5 +483,114 @@ function listenToGameStatus() {
                 }
             });
         }
+    });
+}
+
+blessingsBtn.addEventListener('click', () => {
+    showPage(blessingsPage);
+    listenToBlessings(updateBlessingsList);
+});
+
+backToHomeBtn.addEventListener('click', () => {
+    stopListeningToBlessings();
+    showPage(landingPage);
+});
+
+photoUploadBtn.addEventListener('click', () => {
+    blessingsPhotoInput.click();
+});
+
+blessingsPhotoInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Photo must be smaller than 5MB');
+            return;
+        }
+        
+        selectedPhotoFile = file;
+        photoFilename.textContent = file.name;
+        
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            photoPreviewImg.src = event.target.result;
+            photoPreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+removePhotoBtn.addEventListener('click', () => {
+    selectedPhotoFile = null;
+    blessingsPhotoInput.value = '';
+    photoFilename.textContent = '';
+    photoPreview.style.display = 'none';
+    photoPreviewImg.src = '';
+});
+
+submitBlessingBtn.addEventListener('click', () => {
+    const name = blessingsNameInput.value.trim();
+    const message = blessingsMessageInput.value.trim();
+    
+    hideError(blessingError);
+    submitBlessingBtn.disabled = true;
+    submitBlessingBtn.textContent = 'Sharing...';
+    
+    addBlessing(name, message, selectedPhotoFile)
+        .then(() => {
+            blessingsNameInput.value = '';
+            blessingsMessageInput.value = '';
+            blessingsPhotoInput.value = '';
+            photoFilename.textContent = '';
+            photoPreview.style.display = 'none';
+            photoPreviewImg.src = '';
+            selectedPhotoFile = null;
+            
+            submitBlessingBtn.disabled = false;
+            submitBlessingBtn.textContent = '🎉 Share Your Blessing';
+            
+            alert('✨ Your blessing has been shared!');
+        })
+        .catch((error) => {
+            showError(blessingError, error.message);
+            submitBlessingBtn.disabled = false;
+            submitBlessingBtn.textContent = '🎉 Share Your Blessing';
+        });
+});
+
+function updateBlessingsList(blessings) {
+    blessingsCount.textContent = blessings.length;
+    
+    if (blessings.length === 0) {
+        blessingsList.innerHTML = '<div class="empty-state">No blessings yet. Be the first to share!</div>';
+        return;
+    }
+    
+    blessingsList.innerHTML = '';
+    
+    blessings.forEach(blessing => {
+        const item = document.createElement('div');
+        item.className = 'blessing-item';
+        
+        const hasPhoto = blessing.photo_url && blessing.photo_url !== null;
+        
+        item.innerHTML = `
+            <div class="blessing-header">
+                <div class="blessing-author">
+                    <span class="blessing-icon">💝</span>
+                    <span class="blessing-name">${escapeHtml(blessing.name)}</span>
+                </div>
+            </div>
+            <div class="blessing-content">
+                <p class="blessing-message">${escapeHtml(blessing.message)}</p>
+                ${hasPhoto ? `
+                    <div class="blessing-photo">
+                        <img src="${blessing.photo_url}" alt="Photo from ${escapeHtml(blessing.name)}" loading="lazy">
+                    </div>
+                ` : ''}
+            </div>
+        `;
+        
+        blessingsList.appendChild(item);
     });
 }
